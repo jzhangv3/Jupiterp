@@ -194,7 +194,7 @@
     }
 
     & h1 {
-      @apply text-2xl;
+      @apply mt-0 text-2xl;
       :where(&):not(:where(.not-prose &)) {
         @apply border-b-border border-b-2 pb-1;
       }
@@ -225,6 +225,11 @@
     & ul,
     & ol {
       @apply mb-4 flex flex-col gap-1.5 pl-6;
+
+      ul,
+      ol {
+        @apply mb-0 pl-4;
+      }
     }
 
     & ol {

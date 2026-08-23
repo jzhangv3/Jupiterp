@@ -29,7 +29,7 @@ Copyright (C) 2026 Andrew Cupps
 <Analytics />
 
 <header class="fixed z-50 flex h-12 w-full flex-row justify-between border-b-2 px-4">
-  <a href={resolvedHomeLink} aria-label="Home" rel="canonical" class="flex py-1 max-sm:mx-auto">
+  <a href={resolvedHomeLink} aria-label="Home" rel="canonical" class="flex py-1">
     <img
       src="logo.svg"
       alt="Jupiterp Logo"

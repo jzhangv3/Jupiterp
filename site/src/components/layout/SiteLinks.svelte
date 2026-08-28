@@ -9,7 +9,7 @@ Copyright (C) 2026 Andrew Cupps
   import type { Pathname } from '$app/types';
   import NavBarLink from './NavBarLink.svelte';
   import DarkModeToggle from './DarkModeToggle.svelte';
-  import { BarsOutline, CloseOutline, AngleDownOutline, GithubSolid, BugSolid } from 'flowbite-svelte-icons';
+  import { AngleDownOutline, GithubSolid, BugSolid } from 'flowbite-svelte-icons';
 
   interface NavLink {
     link: Pathname;
@@ -34,19 +34,29 @@ Copyright (C) 2026 Andrew Cupps
   const currentPath: string = $derived(page.url.pathname);
 </script>
 
-<!-- [START] Nav Menu Toggle  -->
+<!-- [START] Nav Menu Toggle -->
 <input type="checkbox" id="nav-menu-toggle" class="peer hidden" />
-<label for="nav-menu-toggle" class="-mr-4 flex cursor-pointer items-center px-4 peer-checked:hidden md:hidden">
-  <BarsOutline class="h-6 w-6" />
+
+<label for="nav-menu-toggle" class="group relative -mr-4 flex cursor-pointer select-none items-center px-4 md:hidden">
+  <svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" class="h-6 w-6">
+    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+      <!-- Top Line: Rotates and slides left by 2px on the X-axis -->
+      <path
+        d="M4 6h17"
+        class="group-peer-checked:rotate-45 group-peer-checked:translate-x-0.5 origin-[4px_6px] transition-transform duration-300"
+      />
+      <!-- Middle Line: Fades out smoothly -->
+      <path d="M4 12h15" class="group-peer-checked:opacity-0 transition-opacity duration-150 ease-in-out" />
+      <!-- Bottom Line: Rotates and slides left by 2px on the X-axis -->
+      <path
+        d="M4 18h17"
+        class="group-peer-checked:-rotate-45 group-peer-checked:translate-x-0.5 origin-[4px_18px] transition-transform duration-300"
+      />
+    </g>
+  </svg>
+  <div class="group-peer-checked:block fixed inset-0 top-12 hidden bg-black/50"></div>
 </label>
-<label
-  for="nav-menu-toggle"
-  class="-mr-4 hidden cursor-pointer items-center px-4 peer-checked:flex md:peer-checked:hidden"
->
-  <CloseOutline class="h-6 w-6" />
-  <div class="-z-1 fixed bottom-0 left-0 right-0 top-12 bg-black/50"></div>
-</label>
-<!-- [END] Nav Menu Toggle  -->
+<!-- [END] Nav Menu Toggle -->
 
 <aside
   class="max-md:bg-bg-primary max-md:scrollbar-gutter-both custom-scrollbar flex py-2 text-lg max-md:fixed max-md:bottom-0 max-md:right-0 max-md:top-12 max-md:min-w-60 max-md:translate-x-full max-md:flex-col max-md:overflow-y-scroll max-md:border-l-2 max-md:px-4 max-md:transition-transform max-md:duration-300 max-md:peer-checked:translate-x-0 md:gap-2"

@@ -65,23 +65,26 @@ Copyright (C) 2026 Andrew Cupps
     {#each navLinks as item, i (i)}
       {#if item.children}
         <div class="nav-list-wrapper relative">
-          <NavBarLink link={item.link} current={currentPath === item.link}>
-            {item.text}
-          </NavBarLink>
-
           <!-- [START] Nav List Toggle  -->
           <input type="checkbox" id="nav-list-{i}" class="peer hidden" />
-          <label
-            for="nav-list-{i}"
-            class="nav-list-toggle hover:text-orange dark:hover:text-light-orange float-right origin-center transition-transform max-md:peer-checked:rotate-180"
-            ><AngleDownOutline height="1.75rem" width="1.75rem" class="p-0.75" />
-          </label>
+
+          <div class="flex justify-between">
+            <NavBarLink link={item.link} current={currentPath === item.link}>
+              {item.text}
+            </NavBarLink>
+            <label
+              for="nav-list-{i}"
+              class="nav-list-toggle hover:text-orange dark:hover:text-light-orange float-right origin-center transition-transform"
+              ><AngleDownOutline height="1.75rem" width="1.75rem" class="p-0.75" />
+            </label>
+          </div>
+
           <label for="nav-list-{i}" class="fixed inset-0 hidden bg-black/50 md:peer-checked:block"></label>
           <!-- [END] Nav List Toggle  -->
 
           <div
             style="transition: height 0.3s;"
-            class="nav-list-contents md:-left-4.25 md:bg-bg-primary md:peer-checked:border-border -mt-px flex h-auto flex-col overflow-clip peer-checked:h-0 max-md:border-y md:absolute md:mt-2.5 md:h-0 md:rounded-lg md:border md:peer-checked:h-auto"
+            class="nav-list-contents md:-left-4.25 md:bg-bg-primary md:peer-checked:border-border md:mt-2.75 -mt-px flex h-auto flex-col overflow-clip peer-checked:h-0 max-md:border-y md:absolute md:h-0 md:rounded-lg md:border md:peer-checked:h-auto"
           >
             {#each item.children as child, j (j)}
               <NavBarLink link={child.link} current={currentPath === child.link} class="md:hover:bg-hover px-4 py-1">
@@ -123,28 +126,38 @@ Copyright (C) 2026 Andrew Cupps
 </aside>
 
 <style>
-  /* TEMP: Just to make sure height:auto can be calculated and animated */
   div.nav-list-wrapper {
-    @supports (interpolate-size: allow-keywords) {
-      interpolate-size: allow-keywords;
+    /* Move to block root: @supports rule is valid inside nesting but unnecessary here */
+    interpolate-size: allow-keywords;
+
+    /* Use a single variable to handle all toggle rotations */
+    --toggle-deg: 180deg;
+
+    > div > label.nav-list-toggle {
+      transform: rotate(var(--toggle-deg));
+      transition: transform 0.2s ease; /* Ensure smooth animation */
+    }
+
+    &:has(input:checked) {
+      --toggle-deg: 0deg;
     }
 
     @media (min-width: 768px) {
-      padding-bottom: 0.75rem;
-      margin-bottom: -0.75rem;
+      --toggle-deg: 0deg;
+
+      &:has(input:checked) {
+        --toggle-deg: 180deg;
+      }
 
       &:hover {
-        > label.nav-list-toggle {
-          transform: rotate(180deg);
-        }
+        --toggle-deg: 180deg;
+
         > div.nav-list-contents {
           height: auto;
-          --tw-shadow:
-            0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-            0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+          /* Rely on Tailwind's core utility names if using standard configurations */
           box-shadow:
-            var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
-            var(--tw-shadow);
+            0 10px 15px -3px rgb(0 0 0 / 0.1),
+            0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
       }
     }

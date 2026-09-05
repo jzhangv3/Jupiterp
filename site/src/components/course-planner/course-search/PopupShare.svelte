@@ -133,7 +133,7 @@
   >
     <div class="flex items-center justify-between">
       <h2 class="text-base font-bold">Export Current Schedule</h2>
-      <button class="text-md -m-1 p-1 hover:text-red-500" title="Close Export" onclick={closePopup}>
+      <button class="text-md hover:text-orange -m-1 p-1" title="Close Export" onclick={closePopup}>
         <CloseOutline />
       </button>
     </div>

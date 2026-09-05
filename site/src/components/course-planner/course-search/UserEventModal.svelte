@@ -223,7 +223,7 @@ Copyright (C) 2026 Andrew Cupps
 
   <!-- Name -->
   <div class="mb-2">
-    <label class="mb-0.5 block text-sm" for="user-event-name">Name<span class="text-red-500">*</span></label>
+    <label class="mb-0.5 block text-sm" for="user-event-name">Name<span class="text-orange">*</span></label>
     <input
       id="user-event-name"
       type="text"
@@ -235,7 +235,7 @@ Copyright (C) 2026 Andrew Cupps
 
   <!-- Days -->
   <div class="mb-2">
-    <label class="mb-0.5 block text-sm" for="user-event-days">Days<span class="text-red-500">*</span></label>
+    <label class="mb-0.5 block text-sm" for="user-event-days">Days<span class="text-orange">*</span></label>
     <div class="flex gap-1.5">
       {#each DAYS as day (day)}
         <button
@@ -255,7 +255,7 @@ Copyright (C) 2026 Andrew Cupps
   <!-- Start / End time fields -->
   <div class="mb-2 flex gap-2">
     <div class="flex-1">
-      <label class="mb-0.5 block text-sm" for="user-event-start">Start<span class="text-red-500">*</span></label>
+      <label class="mb-0.5 block text-sm" for="user-event-start">Start<span class="text-orange">*</span></label>
       <input
         bind:this={startInputRef}
         id="user-event-start"
@@ -268,7 +268,7 @@ Copyright (C) 2026 Andrew Cupps
       />
     </div>
     <div class="flex-1">
-      <label class="mb-0.5 block text-sm" for="user-event-end">End<span class="text-red-500">*</span></label>
+      <label class="mb-0.5 block text-sm" for="user-event-end">End<span class="text-orange">*</span></label>
       <input
         bind:this={endInputRef}
         id="user-event-end"
@@ -307,7 +307,7 @@ Copyright (C) 2026 Andrew Cupps
 
   <!-- Validation errors -->
   {#if errors.length > 0}
-    <div class="mb-2 text-xs text-red-500">
+    <div class="text-orange mb-2 text-xs">
       {#each errors as error, i (i)}
         <div>{error}</div>
       {/each}

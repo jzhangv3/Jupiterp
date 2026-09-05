@@ -40,11 +40,19 @@ Copyright (C) 2026 Andrew Cupps
     hoveredSection = store;
   });
 
-  let selectionsList: ScheduleBlock[];
-  let scheduleName: string;
+  let selectionsList: ScheduleBlock[] = $state([]);
+  let scheduleName: string = $state('');
+  let wasSectionSelected = false;
   CurrentScheduleStore.subscribe((stored) => {
     selectionsList = stored.selections;
     scheduleName = stored.scheduleName;
+
+    const isSectionSelected = selectionsList.some(selectionEquals);
+    if (wasSectionSelected && !isSectionSelected) {
+      showRemoveAlert();
+      removeHoverSection();
+    }
+    wasSectionSelected = isSectionSelected;
   });
 
   let onlyShowingOpen = false;
@@ -149,7 +157,6 @@ Copyright (C) 2026 Andrew Cupps
           : value;
       });
     }
-    sectionAdded = !sectionAdded;
     if (isDesktop) {
       addHoverSection();
     }

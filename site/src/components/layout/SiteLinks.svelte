@@ -119,6 +119,10 @@ Copyright (C) 2026 Andrew Cupps
     interpolate-size: allow-keywords;
     --toggle-deg: 180deg;
 
+    &:has(div.nav-list-contents :global(a[aria-current='true'])) > div > label.nav-list-toggle {
+      color: var(--color-orange);
+    }
+
     > div > label.nav-list-toggle {
       transform: rotate(var(--toggle-deg));
       transition: transform 0.2s ease;

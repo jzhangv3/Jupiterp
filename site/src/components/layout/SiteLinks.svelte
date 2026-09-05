@@ -6,15 +6,15 @@ Copyright (C) 2026 Andrew Cupps
 -->
 <script lang="ts">
   import { page } from '$app/state';
-  import type { Pathname } from '$app/types';
   import NavBarLink from './NavBarLink.svelte';
   import DarkModeToggle from './DarkModeToggle.svelte';
-  import { AngleDownOutline, GithubSolid, BugSolid } from 'flowbite-svelte-icons';
+  import { AngleDownOutline, GithubSolid } from 'flowbite-svelte-icons';
 
   interface NavLink {
-    link: Pathname;
+    link: string;
     text: string;
-    children?: { link: Pathname; text: string }[];
+    children?: { link: string; text: string; isExternal?: boolean; icon?: import('svelte').Component }[];
+    isExternal?: boolean;
   }
 
   const navLinks: NavLink[] = [
@@ -27,6 +27,8 @@ Copyright (C) 2026 Andrew Cupps
         { link: '/terms-of-use', text: 'Terms of Use' },
         { link: '/privacy-policy', text: 'Privacy Policy' },
         { link: '/changelog', text: 'Changelog' },
+        { link: '/bugs', text: 'Report Bugs' },
+        { link: 'https://github.com/atcupps/Jupiterp', text: 'GitHub', isExternal: true, icon: GithubSolid },
       ],
     },
   ];
@@ -59,90 +61,77 @@ Copyright (C) 2026 Andrew Cupps
 <!-- [END] Nav Menu Toggle -->
 
 <aside
-  class="max-md:bg-bg-primary max-md:scrollbar-gutter-both custom-scrollbar flex py-2 text-lg max-md:fixed max-md:bottom-0 max-md:right-0 max-md:top-12 max-md:min-w-60 max-md:translate-x-full max-md:flex-col max-md:overflow-y-scroll max-md:border-l-2 max-md:px-4 max-md:transition-transform max-md:duration-300 max-md:peer-checked:translate-x-0 md:gap-2"
+  class="max-md:bg-bg-primary max-md:scrollbar-gutter-both custom-scrollbar md:text-md flex gap-2 py-2 text-lg max-md:fixed max-md:bottom-0 max-md:right-0 max-md:top-12 max-md:min-w-60 max-md:translate-x-full max-md:flex-col max-md:overflow-y-scroll max-md:border-l-2 max-md:px-4 max-md:transition-transform max-md:duration-300 max-md:peer-checked:translate-x-0 md:gap-6 lg:gap-8"
 >
-  <div class="flex gap-2 max-md:flex-col md:gap-5">
-    {#each navLinks as item, i (i)}
-      {#if item.children}
-        <div class="nav-list-wrapper relative">
-          <!-- [START] Nav List Toggle  -->
-          <input type="checkbox" id="nav-list-{i}" class="peer hidden" />
+  {#each navLinks as item, i (i)}
+    {#if item.children}
+      <div class="nav-list-wrapper relative">
+        <!-- [START] Nav List Toggle  -->
+        <input type="checkbox" id="nav-list-{i}" class="peer hidden" />
 
-          <div class="flex justify-between">
-            <NavBarLink link={item.link} current={currentPath === item.link}>
-              {item.text}
-            </NavBarLink>
-            <label
-              for="nav-list-{i}"
-              class="nav-list-toggle hover:text-orange dark:hover:text-light-orange float-right origin-center transition-transform"
-              ><AngleDownOutline height="1.75rem" width="1.75rem" class="p-0.75" />
-            </label>
-          </div>
-
-          <label for="nav-list-{i}" class="fixed inset-0 hidden bg-black/50 md:peer-checked:block"></label>
-          <!-- [END] Nav List Toggle  -->
-
-          <div
-            style="transition: height 0.3s;"
-            class="nav-list-contents md:-left-4.25 md:bg-bg-primary md:peer-checked:border-border md:mt-2.75 -mt-px flex h-auto flex-col overflow-clip peer-checked:h-0 max-md:border-y md:absolute md:h-0 md:rounded-lg md:border md:peer-checked:h-auto"
-          >
-            {#each item.children as child, j (j)}
-              <NavBarLink link={child.link} current={currentPath === child.link} class="md:hover:bg-hover px-4 py-1">
-                {child.text}
-              </NavBarLink>
-            {/each}
-          </div>
+        <div class="flex justify-between md:-mr-2">
+          <NavBarLink link={item.link} current={currentPath === item.link} isExternal={item.isExternal}>
+            {item.text}
+          </NavBarLink>
+          <label
+            for="nav-list-{i}"
+            class="nav-list-toggle hover:text-orange dark:hover:text-light-orange float-right origin-center transition-transform"
+            ><AngleDownOutline height="1.75rem" width="1.75rem" class="p-0.75" />
+          </label>
         </div>
-      {:else}
-        <NavBarLink link={item.link} current={currentPath === item.link}>
-          {item.text}
-        </NavBarLink>
-      {/if}
-    {/each}
-  </div>
-  <div class="mt-auto max-md:pt-4">
-    <div class="flex flex-row justify-between md:gap-1">
-      <DarkModeToggle />
-      <NavBarLink
-        link={'/bugs' as Pathname}
-        class="hover:bg-hover rounded-lg px-4 py-1 md:p-1"
-        current={currentPath === '/bugs'}
-        title="Report a Bug or Issue"
-      >
-        <BugSolid class="h-6 w-6" />
+
+        <label for="nav-list-{i}" class="fixed inset-0 hidden bg-black/50 md:peer-checked:block"></label>
+        <!-- [END] Nav List Toggle  -->
+
+        <div
+          style="transition: height 0.3s;"
+          class="nav-list-contents md:-left-4.25 md:bg-bg-primary md:peer-checked:border-border md:mt-2.75 -mt-px flex h-auto flex-col overflow-clip peer-checked:h-0 max-md:border-y md:absolute md:h-0 md:rounded-lg md:border md:peer-checked:h-auto"
+        >
+          {#each item.children as child, j (j)}
+            <NavBarLink
+              link={child.link}
+              current={currentPath === child.link}
+              isExternal={child.isExternal}
+              class="md:hover:bg-hover flex items-center px-4 py-1"
+            >
+              {child.text}
+              {#if child.icon}
+                {@const Icon = child.icon}
+                <Icon class="ml-2 h-5 w-5" />
+              {/if}
+            </NavBarLink>
+          {/each}
+        </div>
+      </div>
+    {:else}
+      <NavBarLink link={item.link} current={currentPath === item.link} isExternal={item.isExternal}>
+        {item.text}
       </NavBarLink>
-      <a
-        href="https://github.com/Jupiterp/Jupiterp"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="hover:text-orange dark:hover:text-light-orange hover:bg-hover rounded-lg px-4 py-1 md:p-1"
-        title="View GitHub Repository"
-      >
-        <GithubSolid class="h-6 w-6" />
-      </a>
-    </div>
-    <p class="text-text-secondary my-2 text-sm md:hidden">Made with ❤ by the Jupiterp Team.</p>
+    {/if}
+  {/each}
+  <div class="flex flex-col items-center justify-center text-sm max-md:mt-auto max-md:py-4">
+    <DarkModeToggle />
   </div>
 </aside>
 
 <style>
   div.nav-list-wrapper {
-    /* Move to block root: @supports rule is valid inside nesting but unnecessary here */
     interpolate-size: allow-keywords;
-
-    /* Use a single variable to handle all toggle rotations */
     --toggle-deg: 180deg;
 
     > div > label.nav-list-toggle {
       transform: rotate(var(--toggle-deg));
-      transition: transform 0.2s ease; /* Ensure smooth animation */
+      transition: transform 0.2s ease;
     }
 
     &:has(input:checked) {
       --toggle-deg: 0deg;
     }
 
-    @media (min-width: 768px) {
+    /* Target desktop devices that support a real mouse hover */
+    @media (min-width: 768px) and (hover: hover) {
+      padding-bottom: 0.75rem;
+      margin-bottom: -0.75rem;
       --toggle-deg: 0deg;
 
       &:has(input:checked) {
@@ -154,11 +143,19 @@ Copyright (C) 2026 Andrew Cupps
 
         > div.nav-list-contents {
           height: auto;
-          /* Rely on Tailwind's core utility names if using standard configurations */
           box-shadow:
             0 10px 15px -3px rgb(0 0 0 / 0.1),
             0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
+      }
+    }
+
+    /* Fallback behavior for tablets/touch screens wider than 768px */
+    @media (min-width: 768px) and (hover: none) {
+      --toggle-deg: 0deg;
+
+      &:has(input:checked) {
+        --toggle-deg: 180deg;
       }
     }
   }

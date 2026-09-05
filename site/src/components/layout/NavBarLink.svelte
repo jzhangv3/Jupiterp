@@ -9,21 +9,29 @@ Copyright (C) 2026 Andrew Cupps
   import type { Pathname } from '$app/types';
 
   interface Props {
-    link: Pathname;
+    link: string;
     current?: boolean;
     class?: string;
     title?: string;
     children?: import('svelte').Snippet;
+    isExternal?: boolean;
   }
 
-  let { link, current = false, class: className = '', title = '', children }: Props = $props();
-  let resolvedLink = $derived(resolve(link));
+  let { link, current = false, class: className = '', title = '', children, isExternal = false }: Props = $props();
+
+  // Reactive derived values
+  const { resolvedLink, target, rel } = $derived(
+    isExternal
+      ? { resolvedLink: link, target: '_blank', rel: 'noopener noreferrer' }
+      : { resolvedLink: resolve(link as Pathname), target: '_self', rel: 'canonical' }
+  );
 </script>
 
 <a
+  // eslint-disable-next-line svelte/no-navigation-without-resolve
   href={resolvedLink}
-  target="_self"
-  rel="canonical"
+  {target}
+  {rel}
   class="hover:text-orange dark:hover:text-light-orange aria-current:text-orange aria-current:underline text-nowrap underline-offset-4 hover:transition-colors {className}"
   aria-current={current}
   {title}

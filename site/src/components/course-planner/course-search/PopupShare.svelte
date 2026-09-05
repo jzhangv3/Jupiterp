@@ -138,7 +138,13 @@
       </button>
     </div>
 
-    <p class="mb-2 text-left text-sm">Share your current schedule with others!</p>
+    <p class="mb-2 text-left text-sm">
+      {#if isScheduleEmptyCustom && isScheduleEmpty}
+        Please add courses or events to the schedule.
+      {:else}
+        Share your current schedule with others!
+      {/if}
+    </p>
 
     <button
       class="bg-outline hover:bg-hover flex w-full items-center justify-center rounded-md px-4 py-3 font-medium disabled:cursor-not-allowed disabled:opacity-50"

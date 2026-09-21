@@ -14,7 +14,7 @@ Copyright (C) 2026 Andrew Cupps
   import { getColorFromNumber } from '../../../lib/course-planner/ClassMeetingUtils';
   import Tooltip from './Tooltip.svelte';
   import { CourseInfoPairStore, CurrentScheduleStore, EventEditStore } from '../../../stores/CoursePlannerStores';
-  import type { ClassMeetingExtended, ScheduleBlock, SelectionDifferences } from '../../../types';
+  import type { ClassMeetingExtended, CourseSectionPair, ScheduleBlock, SelectionDifferences } from '../../../types';
 
   interface Props {
     meeting: ClassMeetingExtended;
@@ -103,11 +103,13 @@ Copyright (C) 2026 Andrew Cupps
     return Math.max(0, totalLines - linesUsed);
   });
 
-  // Auto-subscribed with `$store`. A manual `.subscribe()` in a component body
-  // is never cleaned up, and this component is instantiated once per meeting on
-  // the schedule, so each one leaked a callback plus the state it captured.
-  let selections = $derived($CurrentScheduleStore.selections);
-  let scheduleName = $derived($CurrentScheduleStore.scheduleName);
+  let selections: ScheduleBlock[] = $state([]);
+  let scheduleName: string = $state('');
+
+  CurrentScheduleStore.subscribe((stored) => {
+    selections = stored.selections;
+    scheduleName = stored.scheduleName;
+  });
 
   // Wrap in $derived so changes to the meeting prop update these automatically
   const differences: SelectionDifferences = $derived(meeting.differences);
@@ -136,8 +138,15 @@ Copyright (C) 2026 Andrew Cupps
     }
   }
 
-  let courseInfoPair = $derived($CourseInfoPairStore);
-  let eventEditVal = $derived($EventEditStore);
+  let courseInfoPair: CourseSectionPair | null = $state(null);
+  CourseInfoPairStore.subscribe((val) => {
+    courseInfoPair = val;
+  });
+
+  let eventEditVal: { eventId: string } | null = $state(null);
+  EventEditStore.subscribe((val) => {
+    eventEditVal = val;
+  });
 
   function toggleEventInfo() {
     if (meeting.userEvent) {

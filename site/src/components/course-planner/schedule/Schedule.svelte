@@ -232,12 +232,7 @@ Copyright (C) 2026 Andrew Cupps
       <!-- Keyed by index: instructor names, meetings and conditions are not
            guaranteed unique, and a duplicate key is fatal in Svelte 5. -->
       {#each courseInfoSection.instructors as instructor, i (i)}
-        <InstructorListing
-          {instructor}
-          slug={courseInfoSection.instructorSlugs?.[i]}
-          profsHover={false}
-          removeHoverSection={() => {}}
-        />
+        <InstructorListing {instructor} profsHover={false} removeHoverSection={() => {}} />
       {/each}
       <div class="text-sm 2xl:text-base">
         {#each courseInfoSection.meetings as meeting, i (i)}
